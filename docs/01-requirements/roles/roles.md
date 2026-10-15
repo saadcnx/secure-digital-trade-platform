@@ -1,10 +1,11 @@
-# Roles in Phase 1 and How to Simulate Them
+# Roles in Phase 2 and How to Simulate Them
 
 | Role | Work in this phase | Exam simulation |
 |---|---|---|
-| **You (Architect)** | Own the RTM, NFRs, scope decisions | Walk the traceability chain for one requirement |
-| **GRC Analyst / DPO** | Builds regulatory matrix; leads DPIA screening; reviews lawful bases | Show DPIA screening table and say "the DPO objected to X; here's how we resolved it" |
-| **Payments/Security Engineer** | PCI scoping, token strategy | Present PCI scope diagram and Decision 1 |
-| **Compliance/Trade Engineer** | Trade obligations, screening NFRs | Explain how a new list entry reaches production in ≤ 1 h |
-| **ML/Fraud Engineer** | Feasibility check of metrics and latency targets | State what must be true for NFR-01 and NFR-11 |
-| **DevSecOps Engineer** | Feasibility of evidence collection | Name how each Must requirement will be tested automatically |
+| **You (Architect)** | Own all ADRs, matrices, diagrams | Present the decision map and defend 3 ADRs |
+| **ML/Fraud Engineer** | Validates latency budget, feature store choice, fallback design | "The ML engineer confirmed XGBoost inference at ~X ms in our test, so the budget holds" (use your own measurement) |
+| **Compliance/Trade Engineer** | Validates fail-closed hold design and OPA approach | Quote a rule-change example going through Git |
+| **Blockchain/IoT Engineer** | Challenges ledger scope, proposes abstraction | "The engineer wanted more on-chain; I limited it for privacy and performance" |
+| **Payments/Security Engineer** | Reviews token abstraction and mesh policy | Present the PCI scope effect of ADR-0002 |
+| **DevSecOps Engineer** | Validates GitOps, cell reproducibility, fitness functions | Show cell creation as code |
+| **GRC/DPO** | Reviews cell design and transfer rules | "DPO approved cells on condition that the control plane holds no C2" |
