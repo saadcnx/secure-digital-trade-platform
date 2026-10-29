@@ -2,10 +2,11 @@ import { useState } from "react";
 import { api } from "../api";
 import { useApp } from "../state";
 import { OrdersTable } from "../components/OrderManager";
-import { Badge, Empty, Loading, Panel, Stars, fdate, money, useLoad } from "../components/ui";
+import { Badge, Empty, ErrorBox, Loading, Panel, Stars, fdate, money, useLoad } from "../components/ui";
 
 function Overview() {
   const s = useLoad(() => api("/admin/stats"), []);
+  if (s.error) return <ErrorBox error={s.error} onRetry={s.reload} />;
   if (!s.data) return <Loading />;
   const d = s.data;
   const cards = [
@@ -49,7 +50,7 @@ function Users() {
         <h3>Users</h3>
         <input className="sel" placeholder="Search name or email..." value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
-      {!u.data ? <Loading /> : (
+      {u.error ? <ErrorBox error={u.error} onRetry={u.reload} /> : !u.data ? <Loading /> : (
         <div className="scroll">
           <table className="tbl">
             <thead><tr><th>#</th><th>Name</th><th>Email</th><th>Role</th><th>Region</th><th>Joined</th><th>Status</th><th /></tr></thead>
@@ -105,7 +106,7 @@ function Products() {
         <h3>Products</h3>
         <input className="sel" placeholder="Search products..." value={q} onChange={(e) => setQ(e.target.value)} />
       </div>
-      {!p.data ? <Loading /> : (
+      {p.error ? <ErrorBox error={p.error} onRetry={p.reload} /> : !p.data ? <Loading /> : (
         <div className="scroll">
           <table className="tbl">
             <thead><tr><th /><th>Name</th><th>Seller</th><th>Price</th><th>Stock</th><th>Origin</th><th>HS</th><th>Status</th><th /></tr></thead>
@@ -148,7 +149,7 @@ function Reviews() {
   return (
     <div className="card">
       <div className="card-h"><h3>Reviews</h3></div>
-      {!r.data ? <Loading /> : !r.data.length ? <Empty icon="⭐" title="No reviews yet" /> : (
+      {r.error ? <ErrorBox error={r.error} onRetry={r.reload} /> : !r.data ? <Loading /> : !r.data.length ? <Empty icon="⭐" title="No reviews yet" /> : (
         <div className="scroll">
           <table className="tbl">
             <thead><tr><th>Product</th><th>Reviewer</th><th>Rating</th><th>Review</th><th>Verified</th><th>IP</th><th>Date</th><th /></tr></thead>
@@ -186,7 +187,7 @@ function Audit() {
           ))}
         </div>
       </div>
-      {!a.data ? <Loading /> : !a.data.length ? <Empty icon="🗂" title="No log entries" /> : (
+      {a.error ? <ErrorBox error={a.error} onRetry={a.reload} /> : !a.data ? <Loading /> : !a.data.length ? <Empty icon="🗂" title="No log entries" /> : (
         <div className="scroll">
           <table className="tbl">
             <thead><tr><th>Time</th><th>Action</th><th>User</th><th>IP</th><th>Details</th></tr></thead>

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { api } from "../api";
 import { useApp } from "../state";
 import Tracking from "./Tracking";
-import { Badge, Empty, Field, Loading, Modal, fdate, money, useLoad } from "./ui";
+import { Badge, Empty, ErrorBox, Field, Loading, Modal, fdate, money, useLoad } from "./ui";
 
 const NEXT = {
   created: ["cancelled"],
@@ -34,6 +34,8 @@ export function OrdersTable({ admin }) {
       </div>
       {list.loading && !list.data ? (
         <Loading />
+      ) : list.error ? (
+        <ErrorBox error={list.error} onRetry={list.reload} />
       ) : !list.data?.length ? (
         <Empty icon="🧾" title="No orders yet">Orders will appear here.</Empty>
       ) : (
@@ -90,7 +92,9 @@ export function OrderManager({ id, admin, onClose, onChanged }) {
   const order = o.data;
   return (
     <Modal title={`Order #${id}`} onClose={onClose} wide>
-      {!order ? (
+      {o.error && !order ? (
+        <ErrorBox error={o.error} onRetry={o.reload} />
+      ) : !order ? (
         <Loading />
       ) : (
         <>

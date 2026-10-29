@@ -3,7 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useApp } from "../state";
 import { AddressForm, CardForm } from "../components/Forms";
-import { COUNTRIES, Empty, Loading, Modal, money, useLoad } from "../components/ui";
+import { COUNTRIES, Empty, ErrorBox, Loading, Modal, money, useLoad } from "../components/ui";
 
 export default function Checkout() {
   const { currency, notify, refreshCart } = useApp();
@@ -54,6 +54,13 @@ export default function Checkout() {
 
   if ((cart.loading && !cart.data) || (addrs.loading && !addrs.data) || (cards.loading && !cards.data))
     return <div className="container"><Loading /></div>;
+  const loadErr = cart.error || addrs.error || cards.error;
+  if (loadErr)
+    return (
+      <div className="container page">
+        <ErrorBox error={loadErr} onRetry={() => { cart.reload(); addrs.reload(); cards.reload(); }} />
+      </div>
+    );
   const c = cart.data;
   if (!c?.items.length)
     return (

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { api } from "../api";
 import { useApp } from "../state";
 import { OrdersTable } from "../components/OrderManager";
-import { CURRENCIES, COUNTRIES, Badge, Empty, Field, Loading, Modal, Panel, money, useLoad } from "../components/ui";
+import { CURRENCIES, COUNTRIES, Badge, Empty, ErrorBox, Field, Loading, Modal, Panel, money, useLoad } from "../components/ui";
 
 function ProductForm({ initial, cats, onSaved }) {
   const { notify } = useApp();
@@ -96,6 +96,8 @@ function Products() {
       </div>
       {list.loading && !list.data ? (
         <Loading />
+      ) : list.error ? (
+        <ErrorBox error={list.error} onRetry={list.reload} />
       ) : !list.data?.length ? (
         <Empty icon="🏷" title="No products yet">Add your first product to start selling.</Empty>
       ) : (

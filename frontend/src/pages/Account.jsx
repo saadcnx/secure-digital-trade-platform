@@ -2,7 +2,7 @@ import { useState } from "react";
 import { api } from "../api";
 import { useApp } from "../state";
 import { AddressForm, CardForm } from "../components/Forms";
-import { COUNTRIES, Empty, Field, Modal, useLoad } from "../components/ui";
+import { COUNTRIES, Empty, ErrorBox, Field, Modal, useLoad } from "../components/ui";
 
 export default function Account() {
   const { user, setUser, notify } = useApp();
@@ -57,7 +57,7 @@ export default function Account() {
         <div>
           <section className="card">
             <div className="card-h"><h3>Addresses</h3><button className="btn ghost sm" onClick={() => setModal("addr")}>+ Add</button></div>
-            {!addrs.data?.length && <Empty icon="📍" title="No addresses" />}
+            {addrs.error ? <ErrorBox error={addrs.error} onRetry={addrs.reload} /> : !addrs.data?.length && <Empty icon="📍" title="No addresses" />}
             {addrs.data?.map((a) => (
               <div className="kv" key={a.id}>
                 <span>
@@ -70,7 +70,7 @@ export default function Account() {
           </section>
           <section className="card">
             <div className="card-h"><h3>Saved cards</h3><button className="btn ghost sm" onClick={() => setModal("card")}>+ Add</button></div>
-            {!cards.data?.length && <Empty icon="💳" title="No cards" />}
+            {cards.error ? <ErrorBox error={cards.error} onRetry={cards.reload} /> : !cards.data?.length && <Empty icon="💳" title="No cards" />}
             {cards.data?.map((k) => (
               <div className="kv" key={k.token}>
                 <span><b style={{ color: "var(--ink)", textTransform: "capitalize" }}>{k.brand}</b> •••• {k.last4} · {String(k.exp_month).padStart(2, "0")}/{k.exp_year}</span>

@@ -1,6 +1,7 @@
-import { Link, NavLink, Navigate, Route, Routes, useNavigate } from "react-router-dom";
+import { Link, NavLink, Navigate, Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { useApp } from "./state";
 import { CURRENCIES, Loading } from "./components/ui";
+import ErrorBoundary from "./components/ErrorBoundary";
 import Home from "./pages/Home";
 import Product from "./pages/Product";
 import Cart from "./pages/Cart";
@@ -63,10 +64,12 @@ function Guard({ roles, children }) {
 
 export default function App() {
   const { toast } = useApp();
+  const { pathname } = useLocation();
   return (
     <>
       <Nav />
       <main>
+        <ErrorBoundary key={pathname}>
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/product/:id" element={<Product />} />
@@ -81,6 +84,7 @@ export default function App() {
           <Route path="/admin" element={<Guard roles={["admin"]}><Admin /></Guard>} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
+        </ErrorBoundary>
       </main>
       <footer className="footer">
         <div className="container">TradeShield Marketplace · Secure cross-border commerce · Demo platform</div>

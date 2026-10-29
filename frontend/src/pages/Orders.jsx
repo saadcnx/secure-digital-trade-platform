@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { api } from "../api";
 import { useApp } from "../state";
-import { Badge, Empty, Loading, fdate, money, useLoad } from "../components/ui";
+import { Badge, Empty, ErrorBox, Loading, fdate, money, useLoad } from "../components/ui";
 
 export default function Orders() {
   const { user } = useApp();
@@ -13,6 +13,8 @@ export default function Orders() {
       <h2>My orders</h2>
       {list.loading && !list.data ? (
         <Loading />
+      ) : list.error ? (
+        <ErrorBox error={list.error} onRetry={list.reload} />
       ) : !mine?.length ? (
         <Empty icon="📦" title="No orders yet"><Link className="btn" to="/">Start shopping</Link></Empty>
       ) : (

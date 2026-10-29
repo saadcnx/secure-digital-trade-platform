@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 
 export const CURRENCIES = ["USD", "EUR", "GBP", "PKR"];
 export const COUNTRIES = {
@@ -59,6 +59,13 @@ export const Empty = ({ icon = "📭", title, children }) => (
   </div>
 );
 
+export const ErrorBox = ({ error, onRetry }) => (
+  <div className="banner bad spread">
+    <span>Failed to load: {error}</span>
+    {onRetry && <button className="btn ghost sm" onClick={onRetry}>Retry</button>}
+  </div>
+);
+
 export const Field = ({ label, hint, children }) => (
   <label className="field">
     <span>{label}</span>
@@ -106,19 +113,26 @@ export function useLoad(fn, deps = []) {
   const [data, setData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const abortRef = useRef(null);
   const run = useCallback(async () => {
+    abortRef.current?.abort();
+    const ctrl = new AbortController();
+    abortRef.current = ctrl;
     setLoading(true);
     setError(null);
     try {
-      setData(await fn());
+      const d = await fn({ signal: ctrl.signal });
+      if (!ctrl.signal.aborted) setData(d);
     } catch (e) {
-      setError(e.message);
+      if (e.name !== "AbortError" && !ctrl.signal.aborted) setError(e.message);
+    } finally {
+      if (!ctrl.signal.aborted) setLoading(false);
     }
-    setLoading(false);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, deps);
   useEffect(() => {
     run();
+    return () => abortRef.current?.abort();
   }, [run]);
   return { data, loading, error, reload: run, setData };
 }

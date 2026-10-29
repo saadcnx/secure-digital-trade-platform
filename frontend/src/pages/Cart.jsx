@@ -1,7 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { api } from "../api";
 import { useApp } from "../state";
-import { Empty, Loading, money, useLoad } from "../components/ui";
+import { Empty, ErrorBox, Loading, money, useLoad } from "../components/ui";
 
 export default function Cart() {
   const { currency, notify, refreshCart } = useApp();
@@ -21,7 +21,7 @@ export default function Cart() {
   const del = (pid) => change(() => api(`/cart/items/${pid}`, { method: "DELETE", params: { currency } }));
 
   if (cart.loading && !cart.data) return <div className="container"><Loading /></div>;
-  if (cart.error) return <div className="container"><Empty icon="⚠" title="Could not load cart">{cart.error}</Empty></div>;
+  if (cart.error) return <div className="container page"><ErrorBox error={cart.error} onRetry={cart.reload} /></div>;
   const c = cart.data;
   if (!c.items.length)
     return (

@@ -7,7 +7,13 @@ export const useApp = () => useContext(Ctx);
 export function AppProvider({ children }) {
   const [user, setUser] = useState(null);
   const [ready, setReady] = useState(false);
-  const [currency, setCurrencyState] = useState(localStorage.getItem("ts_cur") || "USD");
+  const [currency, setCurrencyState] = useState(() => {
+    try {
+      return localStorage.getItem("ts_cur") || "USD";
+    } catch {
+      return "USD";
+    }
+  });
   const [cartCount, setCartCount] = useState(0);
   const [toast, setToast] = useState(null);
 
@@ -46,12 +52,29 @@ export function AppProvider({ children }) {
     refreshCart();
   }, [user, refreshCart]);
 
+  useEffect(() => {
+    const h = () => {
+      if (!tokenStore.get()) return;
+      tokenStore.set(null);
+      setUser(null);
+      setCartCount(0);
+      notify("Session expired, please login again", "err");
+    };
+    window.addEventListener("auth:expired", h);
+    return () => window.removeEventListener("auth:expired", h);
+  }, [notify]);
+
   const login = async (email, password) => {
     const t = await api("/auth/login", { method: "POST", form: { username: email, password } });
     tokenStore.set(t.access_token);
-    const u = await api("/users/me");
-    setUser(u);
-    return u;
+    try {
+      const u = await api("/users/me");
+      setUser(u);
+      return u;
+    } catch (e) {
+      tokenStore.set(null);
+      throw e;
+    }
   };
 
   const logout = () => {
@@ -61,7 +84,11 @@ export function AppProvider({ children }) {
   };
 
   const setCurrency = (c) => {
-    localStorage.setItem("ts_cur", c);
+    try {
+      localStorage.setItem("ts_cur", c);
+    } catch {
+      return;
+    }
     setCurrencyState(c);
   };
 

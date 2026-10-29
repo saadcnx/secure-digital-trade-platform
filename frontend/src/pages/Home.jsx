@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { api } from "../api";
 import { useApp } from "../state";
-import { COUNTRIES, Empty, Loading, flag, money, useLoad } from "../components/ui";
+import { COUNTRIES, Empty, ErrorBox, Loading, flag, money, useLoad } from "../components/ui";
 
 function ProductCard({ p }) {
   return (
@@ -61,6 +61,8 @@ export default function Home() {
         </div>
         {prods.loading && !prods.data ? (
           <Loading />
+        ) : prods.error ? (
+          <ErrorBox error={prods.error} onRetry={prods.reload} />
         ) : !prods.data?.length ? (
           <Empty icon="🔍" title="No products found">Try a different search or filter.</Empty>
         ) : (

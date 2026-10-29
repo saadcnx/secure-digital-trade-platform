@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { api } from "../api";
 import { useApp } from "../state";
-import { Badge, COUNTRIES, Empty, Field, Loading, StarInput, Stars, fdate, flag, money, useLoad } from "../components/ui";
+import { Badge, COUNTRIES, Empty, ErrorBox, Field, Loading, StarInput, Stars, fdate, flag, money, useLoad } from "../components/ui";
 
 function ReviewForm({ productId, onDone }) {
   const { notify } = useApp();
@@ -106,7 +106,9 @@ export default function Product() {
       <section className="card">
         <div className="card-h"><h3>Customer reviews</h3></div>
         {user && user.id !== x.seller_id && !alreadyReviewed && <ReviewForm productId={id} onDone={rv.reload} />}
-        {!reviews?.items.length ? (
+        {rv.error && !reviews ? (
+          <ErrorBox error={rv.error} onRetry={rv.reload} />
+        ) : !reviews?.items.length ? (
           <p className="muted">No reviews yet. Be the first to share your experience.</p>
         ) : (
           reviews.items.map((r) => (
