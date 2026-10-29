@@ -1,3 +1,5 @@
+from typing import Optional
+
 from fastapi import Depends, HTTPException
 from fastapi.security import OAuth2PasswordBearer
 from jose import JWTError
@@ -8,6 +10,7 @@ from app.models import User
 from app.security import decode_token
 
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/auth/login")
+oauth2_optional = OAuth2PasswordBearer(tokenUrl="/auth/login", auto_error=False)
 
 
 def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(get_db)) -> User:
@@ -19,6 +22,14 @@ def get_current_user(token: str = Depends(oauth2_scheme), db: Session = Depends(
     if not user or not user.is_active:
         raise HTTPException(401, "User not found or inactive", headers={"WWW-Authenticate": "Bearer"})
     return user
+
+
+def get_optional_user(
+    token: Optional[str] = Depends(oauth2_optional), db: Session = Depends(get_db)
+) -> Optional[User]:
+    if not token:
+        return None
+    return get_current_user(token, db)
 
 
 def require_roles(*roles: str):

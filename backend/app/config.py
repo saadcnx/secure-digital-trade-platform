@@ -7,6 +7,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_MINUTES = int(os.getenv("ACCESS_TOKEN_MINUTES", "60"))
 FRAUD_URL = os.getenv("FRAUD_URL", "")
 COMPLIANCE_URL = os.getenv("COMPLIANCE_URL", "")
+SERVICE_API_KEY = os.getenv("SERVICE_API_KEY", "")
 CORS_ORIGINS = [
     o.strip()
     for o in os.getenv("CORS_ORIGINS", "http://localhost:3000,http://localhost:5173").split(",")

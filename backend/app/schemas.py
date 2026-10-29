@@ -199,6 +199,106 @@ class OrderOut(ORM):
     payments: list[PaymentOut]
 
 
+ShipmentStatus = Literal[
+    "label_created",
+    "picked_up",
+    "in_transit",
+    "customs_clearance",
+    "out_for_delivery",
+    "delivered",
+    "delayed",
+    "exception",
+    "temperature_alert",
+    "returned",
+]
+
+
+class ShipmentCreateIn(BaseModel):
+    carrier: str = Field(min_length=1, max_length=80)
+    tracking_number: Optional[str] = Field(None, min_length=3, max_length=40)
+    origin: Optional[str] = Field(None, max_length=200)
+
+
+class ShipmentEventIn(BaseModel):
+    status: ShipmentStatus
+    location: str = Field(min_length=1, max_length=200)
+    latitude: Optional[float] = Field(None, ge=-90, le=90)
+    longitude: Optional[float] = Field(None, ge=-180, le=180)
+    temperature: Optional[float] = Field(None, ge=-100, le=100)
+    note: Optional[str] = Field(None, max_length=300)
+    timestamp: Optional[datetime] = None
+
+
+class ShipmentEventOut(ORM):
+    id: int
+    status: str
+    location: str
+    latitude: Optional[float] = None
+    longitude: Optional[float] = None
+    temperature: Optional[float] = None
+    note: Optional[str] = None
+    source: str
+    created_at: datetime
+
+
+class ShipmentOut(ORM):
+    id: int
+    order_id: int
+    carrier: str
+    tracking_number: str
+    status: str
+    created_at: datetime
+    events: list[ShipmentEventOut]
+
+
+class ReviewIn(BaseModel):
+    rating: int = Field(ge=1, le=5)
+    title: str = Field(min_length=1, max_length=120)
+    body: str = Field("", max_length=2000)
+
+
+class ReviewOut(BaseModel):
+    id: int
+    product_id: int
+    product_name: Optional[str] = None
+    user_id: int
+    reviewer_name: str
+    rating: int
+    title: str
+    body: str
+    verified_purchase: bool
+    created_at: datetime
+
+
+class AdminReviewOut(ReviewOut):
+    ip: Optional[str] = None
+
+
+class ReviewListOut(BaseModel):
+    average: float
+    count: int
+    items: list[ReviewOut]
+
+
+class AdminUserOut(UserOut):
+    is_active: bool
+
+
+class AdminUserUpdate(BaseModel):
+    is_active: Optional[bool] = None
+    role: Optional[Literal["buyer", "seller", "admin"]] = None
+
+
+class AuditOut(ORM):
+    id: int
+    user_id: Optional[int] = None
+    action: str
+    ip: Optional[str] = None
+    user_agent: Optional[str] = None
+    detail: Optional[dict] = None
+    created_at: datetime
+
+
 class StatusIn(BaseModel):
     status: Literal["packed", "shipped", "delivered", "cancelled", "refunded"]
 

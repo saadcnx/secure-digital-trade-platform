@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app import models  # noqa: F401
 from app.config import CORS_ORIGINS
 from app.database import Base, engine
-from app.routers import auth, cart, catalog, orders, payments, users
+from app.routers import admin, auth, cart, catalog, orders, payments, reviews, shipments, users
 
 
 @asynccontextmanager
@@ -31,6 +31,9 @@ app.include_router(catalog.router)
 app.include_router(cart.router)
 app.include_router(orders.router)
 app.include_router(payments.router)
+app.include_router(shipments.router)
+app.include_router(reviews.router)
+app.include_router(admin.router)
 
 
 @app.get("/health", tags=["system"])

@@ -162,6 +162,56 @@ class Payment(Base):
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
 
 
+class Shipment(Base):
+    __tablename__ = "shipments"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    order_id: Mapped[int] = mapped_column(ForeignKey("orders.id", ondelete="CASCADE"), unique=True, index=True)
+    carrier: Mapped[str] = mapped_column(String(80))
+    tracking_number: Mapped[str] = mapped_column(String(40), unique=True, index=True)
+    status: Mapped[str] = mapped_column(String(30), default="label_created")
+    created_by: Mapped[Optional[int]] = mapped_column(Integer)
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    events: Mapped[list["ShipmentEvent"]] = relationship(
+        cascade="all, delete-orphan", order_by="ShipmentEvent.id"
+    )
+
+
+class ShipmentEvent(Base):
+    __tablename__ = "shipment_events"
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    shipment_id: Mapped[int] = mapped_column(ForeignKey("shipments.id", ondelete="CASCADE"), index=True)
+    status: Mapped[str] = mapped_column(String(30))
+    location: Mapped[str] = mapped_column(String(200))
+    latitude: Mapped[Optional[float]] = mapped_column(Float)
+    longitude: Mapped[Optional[float]] = mapped_column(Float)
+    temperature: Mapped[Optional[float]] = mapped_column(Float)
+    note: Mapped[Optional[str]] = mapped_column(String(300))
+    source: Mapped[str] = mapped_column(String(30), default="manual")
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+
+class Review(Base):
+    __tablename__ = "reviews"
+    __table_args__ = (UniqueConstraint("product_id", "user_id"),)
+
+    id: Mapped[int] = mapped_column(primary_key=True)
+    product_id: Mapped[int] = mapped_column(ForeignKey("products.id"), index=True)
+    user_id: Mapped[int] = mapped_column(ForeignKey("users.id"), index=True)
+    rating: Mapped[int] = mapped_column(Integer)
+    title: Mapped[str] = mapped_column(String(120))
+    body: Mapped[str] = mapped_column(Text, default="")
+    verified_purchase: Mapped[bool] = mapped_column(Boolean, default=False)
+    ip: Mapped[Optional[str]] = mapped_column(String(64))
+    user_agent: Mapped[Optional[str]] = mapped_column(String(300))
+    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), server_default=func.now())
+
+    user: Mapped["User"] = relationship()
+    product: Mapped["Product"] = relationship()
+
+
 class AuditLog(Base):
     __tablename__ = "audit_logs"
 
