@@ -1,0 +1,60 @@
+flowchart LR
+    U["Customers / marketplace"]
+    R53["Route 53"]
+    CF["CloudFront"]
+    WAF["AWS WAF<br/>managed rules + rate limits"]
+    APIGW["API Gateway<br/>JWT authorizer + throttling"]
+    ORCH["Checkout orchestration<br/>ECS/Fargate or Lambda"]
+    SF["Step Functions<br/>workflow + retries"]
+    FRAUD["Fraud model service<br/>container endpoint / SageMaker"]
+    COMPLY["Compliance screening service<br/>approved list provider + policy rules"]
+    PAY["Payment service"]
+    PSP["PCI-scoped payment provider<br/>hosted fields / tokenization"]
+    SQS["SQS event queue"]
+    IOT["AWS IoT Core<br/>device certificates + MQTT"]
+    LEDGER["Permissioned ledger<br/>Fabric on managed compute"]
+    S3EU[("EU-region S3 / data store")]
+    S3US[("US-region S3 / data store")]
+    DB[("Regional data stores")]
+    KMS["AWS KMS<br/>customer-managed keys"]
+    SM["Secrets Manager"]
+    CT["CloudTrail + CloudWatch"]
+    CI["GitHub Actions<br/>Bandit + Trivy + tests"]
+    ECR["Amazon ECR<br/>image scanning"]
+    DEPLOY["Controlled deployment"]
+
+    U --> R53 --> CF --> WAF --> APIGW --> ORCH --> SF
+    SF --> FRAUD
+    SF --> COMPLY
+    SF --> PAY --> PSP
+    SF --> SQS --> IOT --> LEDGER
+    ORCH --> DB
+    DB --> KMS
+    ORCH --> S3EU
+    ORCH --> S3US
+    ORCH --> SM
+    APIGW --> CT
+    ORCH --> CT
+    CI --> ECR --> DEPLOY
+
+    subgraph AWS["Proposed AWS production environment"]
+        APIGW
+        ORCH
+        SF
+        FRAUD
+        COMPLY
+        PAY
+        PSP
+        SQS
+        IOT
+        LEDGER
+        S3EU
+        S3US
+        DB
+        KMS
+        SM
+        CT
+    end
+
+    classDef proposed fill:#e8f1ff,stroke:#1a5fb4,color:#111;
+    class AWS proposed;

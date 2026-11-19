@@ -1,0 +1,24 @@
+flowchart LR
+    CLIENT["Authorized developer / examiner"]
+    SSH["SSH access<br/>allow only trusted source IP"]
+    LOOP["EC2 localhost services<br/>127.0.0.1 only"]
+    API["FastAPI demo API<br/>port 8000"]
+    MQTT["MQTT broker<br/>port 1883"]
+    BRIDGE["Fabric bridge<br/>port 8004"]
+    FABRIC["Fabric test containers"]
+    SG["AWS Security Group<br/>no public app/MQTT/Fabric ports"]
+    IAM["Production target: least-privilege IAM roles"]
+    KMS["Production target: KMS key policies"]
+    LOG["Production target: CloudTrail + monitored logs"]
+    CI["GitHub Actions<br/>tests + Bandit + Trivy"]
+    REG["Production target: ECR scan + gated deploy"]
+
+    CLIENT --> SSH --> LOOP
+    LOOP --> API
+    LOOP --> MQTT
+    LOOP --> BRIDGE --> FABRIC
+    SG -. "restrict inbound paths" .-> SSH
+    CI --> REG
+    IAM -. "AWS production control" .-> API
+    API -. "production encryption keys" .-> KMS
+    API -. "production audit trail" .-> LOG

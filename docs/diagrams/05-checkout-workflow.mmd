@@ -1,0 +1,27 @@
+flowchart TD
+    START["Checkout request"]
+    AUTH{"Demo API key valid?"}
+    FRAUD["XGBoost + behavioral risk score"]
+    FDEC{"Fraud decision"}
+    BLOCKF["Block; do not tokenize"]
+    STEP["Return STEP_UP_AUTH_REQUIRED<br/>real OTP/3DS not implemented"]
+    COMPLY["Sanctions demo list + tariff sample + policy rules"]
+    CDEC{"Trade checks pass?"}
+    BLOCKC["Compliance hold; do not tokenize"]
+    TESTPAN{"Published test PAN only?"}
+    TOKEN["AES-GCM tokenization demo<br/>no payment charge"]
+    PRIV["Privacy routing simulation<br/>regional demo DB + redacted analytics"]
+    DOC["Generate educational customs JSON"]
+    SHIP["Shipment creation / tracking"]
+    END["Return honest demo status"]
+
+    START --> AUTH
+    AUTH -- "No" --> END
+    AUTH -- "Yes" --> FRAUD --> FDEC
+    FDEC -- "BLOCK" --> BLOCKF --> END
+    FDEC -- "STEP_UP" --> STEP --> END
+    FDEC -- "ALLOW" --> COMPLY --> CDEC
+    CDEC -- "No" --> BLOCKC --> END
+    CDEC -- "Yes" --> TESTPAN
+    TESTPAN -- "No" --> END
+    TESTPAN -- "Yes" --> TOKEN --> PRIV --> DOC --> SHIP --> END

@@ -1,0 +1,45 @@
+flowchart LR
+    C["Demo client / curl / browser"]
+    T["SSH tunnel to EC2 localhost"]
+    O["FastAPI Checkout Orchestrator<br/>127.0.0.1:8000"]
+    F["Fraud service<br/>XGBoost + behavior rules"]
+    K["Trade compliance<br/>RapidFuzz + demo policy rules"]
+    P["Payment tokenizer<br/>test PAN only"]
+    V[("SQLite vault<br/>AES-GCM ciphertext")]
+    R["Privacy routing service<br/>Presidio + local SQLite"]
+    A[("Local analytics DB<br/>redacted demo data")]
+    M["Mosquitto MQTT<br/>localhost:1883"]
+    S["Synthetic sensor simulator"]
+    L["MQTT listener<br/>threshold anomaly detection"]
+    B["Fabric local bridge<br/>localhost:8004"]
+    H["Hyperledger Fabric test network<br/>Org1 + Org2"]
+    D[("Fabric shipment ledger")]
+
+    C --> T --> O
+    O --> F
+    O --> K
+    O --> P --> V
+    O --> R --> A
+    S --> M --> L
+    L --> B --> H --> D
+
+    O -. "optional/manual integration" .-> B
+
+    subgraph LOCAL["One Ubuntu EC2 host — educational prototype"]
+        O
+        F
+        K
+        P
+        V
+        R
+        A
+        M
+        S
+        L
+        B
+        H
+        D
+    end
+
+    classDef warning fill:#fff3cd,stroke:#8a6d3b,color:#222;
+    class C warning;

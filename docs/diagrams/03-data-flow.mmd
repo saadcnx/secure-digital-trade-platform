@@ -1,0 +1,50 @@
+flowchart LR
+    USER["Demo user / customer"]
+    INTERNET["Untrusted network"]
+    TUNNEL["SSH tunnel<br/>demo access"]
+    API["Local FastAPI orchestrator"]
+    FRAUD["Fraud scoring<br/>transaction features only"]
+    COMPLIANCE["Compliance checks<br/>demo buyer name + route"]
+    TOKEN["Demo tokenizer<br/>published test PAN only"]
+    VAULT[("Local encrypted SQLite vault")]
+    PRIVACY["PII redaction + region router"]
+    REGIONAL[("Simulated regional DB<br/>contains demo PII")]
+    ANALYTICS[("Analytics DB<br/>redacted fields + pseudonymous ref")]
+    SENSOR["Synthetic sensor"]
+    MQTT["Local MQTT broker"]
+    LISTENER["Listener + threshold checks"]
+    FABRIC["Fabric test ledger<br/>shipment events"]
+    AUDIT["Local privacy audit<br/>no direct customer fields"]
+
+    USER -->|"demo order + test PAN + demo PII"| INTERNET
+    INTERNET --> TUNNEL --> API
+    API -->|"amount, country, device features"| FRAUD
+    API -->|"buyer name, countries, product category"| COMPLIANCE
+    API -->|"test PAN in prototype only"| TOKEN -->|"ciphertext + nonce"| VAULT
+    API -->|"demo structured PII"| PRIVACY
+    PRIVACY -->|"regional simulation"| REGIONAL
+    PRIVACY -->|"redacted analytics"| ANALYTICS
+    SENSOR -->|"synthetic GPS/temp"| MQTT --> LISTENER
+    LISTENER -->|"shipment status; no card data"| FABRIC
+    PRIVACY -->|"deletion counts/request ref"| AUDIT
+
+    subgraph B1["Trust boundary: client / untrusted network"]
+        USER
+        INTERNET
+    end
+    subgraph B2["Trust boundary: local application host"]
+        TUNNEL
+        API
+        FRAUD
+        COMPLIANCE
+        TOKEN
+        PRIVACY
+        LISTENER
+    end
+    subgraph B3["Restricted local demo stores"]
+        VAULT
+        REGIONAL
+        ANALYTICS
+        AUDIT
+        FABRIC
+    end

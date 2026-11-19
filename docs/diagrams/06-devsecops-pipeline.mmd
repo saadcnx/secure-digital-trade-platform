@@ -1,0 +1,22 @@
+flowchart LR
+    DEV["Developer change"]
+    PR["Pull request"]
+    TEST["Pytest + code checks"]
+    BANDIT["Bandit<br/>Python SAST"]
+    TRIVY["Trivy<br/>dependencies, secrets, config"]
+    GATE{"Required checks pass?"}
+    FAIL["Fail pipeline<br/>fix findings"]
+    BUILD["Build container image"]
+    IMAGE_SCAN["Container image scan"]
+    APPROVAL["Human approval"]
+    DEPLOY["Controlled deployment"]
+    MONITOR["Post-deploy monitoring"]
+
+    DEV --> PR --> TEST
+    PR --> BANDIT
+    PR --> TRIVY
+    TEST --> GATE
+    BANDIT --> GATE
+    TRIVY --> GATE
+    GATE -- "No" --> FAIL --> DEV
+    GATE -- "Yes" --> BUILD --> IMAGE_SCAN --> APPROVAL --> DEPLOY --> MONITOR
