@@ -1,38 +1,37 @@
-# Phase 3: Detailed Design
+# Phase 4: Event Backbone, APIs & Integration
 
-**Effort:** 1.5–2 weeks | **Primary roles:** all engineers, architect, GRC
+**Effort:** 1–1.5 weeks | **Primary roles:** architect, DevSecOps, domain engineers
 
-**Output:** detailed component designs, C4 L3 diagrams, latency budgets, failure tables, and examiner Q&A for each of the four domains.
+**Output:** event catalogue, integration contracts, DFDs L0/L1, trust boundaries TB1–TB8, cross-border flow register, resilience matrix, examiner Q&A.
 
 ## Contents
 
-- `fraud/fraud-design.md` — Fraud Detection Design (Phase 3A)
-- `compliance/compliance-design.md` — Trade Compliance Design (Phase 3B)
-- `supply-chain/supply-chain-design.md` — Supply Chain Visibility & Logistics Security (Phase 3C)
-- `payments/payment-design.md` — Payment Security & Digital Trade Infrastructure (Phase 3D)
+- `event-catalogue.md` — Phase 4A: events, envelope, topics, reliability, APIs, gateway/mesh policy, examiner Q&A
+- `dfd-trust-boundaries.md` — Phase 4B: DFDs, trust boundaries, cross-border register, resilience, degradation matrix, examiner Q&A
 
 ## Diagram files (draw.io, in `docs/diagrams/`)
 
 | Diagram | File |
 |---|---|
-| 3.1 Fraud Components (C4 L3) | `3.1-fraud-components.drawio` |
-| 3.2 Compliance Components (C4 L3) | `3.2-compliance-components.drawio` |
-| 3.3 Supply Chain Components (C4 L3) | `3.3-supply-chain-components.drawio` |
-| 3.4 Payment Components (C4 L3) | `3.4-payment-components.drawio` |
+| 4.1 Event Flow | `4.1-event-flow.drawio` |
+| 4.2 DFD Level 0 | `4.2-dfd-level0.drawio` |
+| 4.3 DFD Level 1 (one cell) | `4.3-dfd-level1.drawio` |
+| 4.4 Cross-border flow | `4.4-cross-border-flow.drawio` |
+| 4.5 Degradation matrix | `4.5-degradation-matrix.drawio` |
 
 ## Cross-references
 
+- Phase 3 design: `docs/03-design/`
+- ADRs: `docs/adr/`
 - Requirements: `docs/01-requirements/rtm/rtm.md`
 - NFRs: `docs/01-requirements/nfr/nfr.md`
-- Phase 2 architecture: `docs/02-architecture/`
-- ADRs: `docs/adr/`
 
-## Exit criteria (Milestone M3)
+## Exit criteria (Milestone M4)
 
-- ☐ Four Phase 3 design docs complete
-- ☐ C4 L3 diagrams drawn (4 files)
-- ☐ Latency budgets validated against NFR-01
-- ☐ Failure tables reviewed by simulated stakeholders
-- ☐ Examiner Q&A rehearsed
-- ☐ Every design decision traces to an ADR or RTM row
-- ☐ Baseline tagged `design-baseline-v1`
+- ☐ One order traced end-to-end with `correlation_id` across all domains
+- ☐ All 8 trust boundaries identified and mapped to controls
+- ☐ Cross-border flow register complete, linked to ROPA
+- ☐ Degradation matrix reviewed by simulated stakeholders
+- ☐ Event catalogue complete; every event has a schema and class
+- ☐ CI gates in place for schema compat and `data_class` tag
+- ☐ Baseline tagged `integration-baseline-v1`
