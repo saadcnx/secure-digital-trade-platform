@@ -1,0 +1,38 @@
+{
+  "embargoed_countries": {
+    "KP": "North Korea (Comprehensive UN/OFAC Embargo)",
+    "IR": "Iran (OFAC Comprehensive Trade Sanctions)",
+    "SY": "Syria (Export Administration Regulations Embargo)",
+    "CU": "Cuba (OFAC Trade Embargo)"
+  },
+  "denied_parties": [
+    {
+      "entity_id": "OFAC-SDN-1092",
+      "name": "Viktor Anatolyevich Bout",
+      "aliases": ["Victor Bout", "Viktor Bulakin"],
+      "list_source": "US_OFAC_SDN",
+      "category": "ILLICIT_ARMS_TRAFFICKING"
+    },
+    {
+      "entity_id": "UN-SC-4421",
+      "name": "Al Quds International Trading LLC",
+      "aliases": ["Al-Quds Logistics", "Quds Global Freight"],
+      "list_source": "UN_SECURITY_COUNCIL",
+      "category": "SANCTIONED_FRONT_COMPANY"
+    },
+    {
+      "entity_id": "EU-FSL-8830",
+      "name": "Severnaya Defense Microelectronics Corp",
+      "aliases": ["Severnaya Tech", "Severnaya Semiconductors"],
+      "list_source": "EU_CONSOLIDATED_SANCTIONS",
+      "category": "MILITARY_END_USER"
+    },
+    {
+      "entity_id": "BIS-EL-5519",
+      "name": "Pyongyang Kwangmyong Trading",
+      "aliases": ["Kwangmyong Corp"],
+      "list_source": "US_BIS_ENTITY_LIST",
+      "category": "PROLIFERATION_CONCERN"
+    }
+  ]
+}

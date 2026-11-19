@@ -1,0 +1,32 @@
+# --- Core API & Microservices Framework ---
+fastapi==0.111.0
+uvicorn[standard]==0.30.1
+pydantic==2.7.4
+python-dotenv==1.0.1
+httpx==0.27.0
+
+# --- Phase 2: AI Fraud Detection (ML & Behavioral Analytics) ---
+numpy==1.26.4
+pandas==2.2.2
+scikit-learn==1.5.0
+xgboost==2.0.3
+joblib==1.4.2
+
+# --- Phase 3: Cross-Border Trade Compliance & Sanctions ---
+rapidfuzz==3.9.3
+
+# --- Phase 4: Payment Security & PCI-DSS Tokenization ---
+cryptography==42.0.8
+PyJWT==2.8.0
+
+# --- Phase 5: Supply Chain IoT & MQTT ---
+paho-mqtt==2.1.0
+
+# --- Phase 6: Data Privacy & GDPR/CCPA Governance ---
+spacy==3.7.5
+presidio-analyzer==2.2.354
+presidio-anonymizer==2.2.354
+
+# --- Phase 7: DevSecOps Automated Testing & Security ---
+pytest==8.2.2
+bandit==1.7.9

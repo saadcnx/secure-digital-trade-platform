@@ -1,0 +1,63 @@
+name: DevSecOps
+
+on:
+  push:
+    branches: ["main"]
+  pull_request:
+    branches: ["main"]
+
+permissions:
+  contents: read
+
+jobs:
+  test-and-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: "pip"
+
+      - name: Install project dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+          pip install pytest bandit pip-audit
+
+      - name: Install spaCy English model
+        run: python -m spacy download en_core_web_sm
+
+      - name: Build synthetic fraud model
+        run: |
+          python -m fraud_engine.generate_data
+          python -m fraud_engine.train_fraud_model
+          python -m fraud_engine.fake_review_detector
+
+      - name: Run tests
+        run: pytest -q
+
+      - name: Bandit (SAST)
+        run: |
+          bandit -r \
+            fraud_engine compliance_engine payment_vault \
+            iot_logistics blockchain_ledger privacy_governance orchestrator \
+            -ll -f txt
+
+      - name: Dependency audit
+        run: pip-audit -r requirements.txt
+
+      - name: Trivy filesystem scan
+        uses: aquasecurity/trivy-action@0.28.0
+        with:
+          scan-type: "fs"
+          scan-ref: "."
+          format: "table"
+          severity: "HIGH,CRITICAL"
+          exit-code: "1"
+          scanners: "vuln,secret,misconfig"
+          skip-dirs: "venv,blockchain_ledger/fabric-samples"

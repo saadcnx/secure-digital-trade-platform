@@ -1,0 +1,41 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: trade-checkout-app
+    restart: unless-stopped
+    env_file:
+      - .env
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    ports:
+      - "127.0.0.1:8000:8000"
+    volumes:
+      - ./payment_vault/data:/app/payment_vault/data
+      - ./privacy_governance/data:/app/privacy_governance/data
+      - ./iot_logistics/data:/app/iot_logistics/data
+      - ./compliance_engine/customs_docs:/app/compliance_engine/customs_docs
+    healthcheck:
+      test:
+        - CMD
+        - curl
+        - -fsS
+        - http://127.0.0.1:8000/health
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 120s
+
+  mosquitto:
+    image: eclipse-mosquitto:2
+    container_name: trade-mosquitto-compose
+    restart: unless-stopped
+    ports:
+      - "127.0.0.1:1884:1883"
+    volumes:
+      - ./iot_logistics/mosquitto/mosquitto.conf:/mosquitto/config/mosquitto.conf:ro
+      - ./iot_logistics/mosquitto/acl:/mosquitto/config/acl:ro
+      - ./iot_logistics/mosquitto/passwd:/mosquitto/config/passwd:ro
+      - ./iot_logistics/mosquitto/data:/mosquitto/data
+      - ./iot_logistics/mosquitto/log:/mosquitto/log

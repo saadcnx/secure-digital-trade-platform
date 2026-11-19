@@ -1,0 +1,7 @@
+[
+  "tests/test_checkout_failure.py::test_checkout_fails_closed_if_fraud_service_fails",
+  "tests/test_phase7.py::test_germany_routes_to_demo_eu_region",
+  "tests/test_phase7.py::test_pakistan_routes_to_demo_apac_region",
+  "tests/test_phase7.py::test_unknown_country_is_not_silently_routed",
+  "tests/test_phase7.py::test_us_routes_to_demo_us_region"
+]

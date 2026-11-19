@@ -1,0 +1,15 @@
+.env
+venv/
+.git/
+__pycache__/
+*.pyc
+*.db
+*.sqlite3
+*.log
+reports/
+fraud_engine/data/
+fraud_engine/models/
+privacy_governance/data/
+payment_vault/data/
+iot_logistics/data/
+compliance_engine/customs_docs/

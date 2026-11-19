@@ -1,0 +1,58 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Global Trade Platform — Local Demo</title>
+  <style>
+    body {
+      max-width: 850px; margin: 3rem auto; padding: 0 1rem;
+      font: 16px/1.6 system-ui, sans-serif; color: #152238;
+    }
+    .notice { background: #fff3cd; padding: 1rem; border-radius: 8px; }
+    .card { border: 1px solid #d9e0ea; border-radius: 8px; padding: 1rem; margin: 1rem 0; }
+    code { background: #f1f4f8; padding: .15rem .35rem; }
+    a { color: #0759b5; }
+  </style>
+</head>
+<body>
+  <h1>Global Trade Platform</h1>
+  <p>Local educational prototype dashboard.</p>
+
+  <div class="notice">
+    <strong>Demo only.</strong> Do not enter real customer data or real card
+    details. The project does not authorize or charge payments and is not
+    PCI-DSS/GDPR certified.
+  </div>
+
+  <section class="card">
+    <h2>Orchestrator</h2>
+    <p id="health">Checking local health endpoint…</p>
+    <p><a href="/docs">Open API documentation</a></p>
+    <p>Checkout endpoint: <code>POST /api/v1/checkout</code></p>
+  </section>
+
+  <section class="card">
+    <h2>Demo flow</h2>
+    <ol>
+      <li>Submit the demo API key in the <code>X-Demo-API-Key</code> header.</li>
+      <li>Send synthetic customer/order data and the published test PAN only.</li>
+      <li>Review fraud, compliance, tokenization, and shipment results.</li>
+    </ol>
+    <p>Never put API keys in this HTML page or in source control.</p>
+  </section>
+
+  <script>
+    fetch("/health")
+      .then(response => response.json())
+      .then(data => {
+        document.getElementById("health").textContent =
+          `Status: ${data.status} — ${data.service}`;
+      })
+      .catch(() => {
+        document.getElementById("health").textContent =
+          "Health endpoint unavailable.";
+      });
+  </script>
+</body>
+</html>

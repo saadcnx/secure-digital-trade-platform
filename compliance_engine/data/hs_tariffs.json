@@ -1,0 +1,42 @@
+{
+  "product_categories": {
+    "CONSUMER_ELECTRONICS": {
+      "hs_code": "8517.13",
+      "description": "Smartphones, Wireless Devices & Telecom Apparatus",
+      "base_duty_rate": 0.06,
+      "export_control_eccn": "EAR99"
+    },
+    "APPAREL_TEXTILES": {
+      "hs_code": "6109.10",
+      "description": "Cotton T-Shirts, Garments & Knitted Apparel",
+      "base_duty_rate": 0.12,
+      "export_control_eccn": "EAR99"
+    },
+    "COLD_CHAIN_PHARMA": {
+      "hs_code": "3002.20",
+      "description": "Vaccines, Biologics & Temperature-Sensitive Pharmaceuticals",
+      "base_duty_rate": 0.00,
+      "export_control_eccn": "EAR99"
+    },
+    "AI_ACCELERATOR_CHIPS": {
+      "hs_code": "8542.31",
+      "description": "High-Performance AI/Crypto Processors & Integrated Circuits",
+      "base_duty_rate": 0.08,
+      "export_control_eccn": "3A090_DUAL_USE"
+    },
+    "LITHIUM_BATTERY_PACK": {
+      "hs_code": "8507.60",
+      "description": "High-Capacity Lithium-Ion Accumulators (Hazmat Class 9)",
+      "base_duty_rate": 0.07,
+      "export_control_eccn": "EAR99"
+    }
+  },
+  "country_tax_profiles": {
+    "US": {"vat_gst_rate": 0.07, "de_minimis_usd": 800.0},
+    "GB": {"vat_gst_rate": 0.20, "de_minimis_usd": 170.0},
+    "DE": {"vat_gst_rate": 0.19, "de_minimis_usd": 165.0},
+    "AE": {"vat_gst_rate": 0.05, "de_minimis_usd": 270.0},
+    "PK": {"vat_gst_rate": 0.18, "de_minimis_usd": 35.0},
+    "DEFAULT": {"vat_gst_rate": 0.15, "de_minimis_usd": 100.0}
+  }
+}
