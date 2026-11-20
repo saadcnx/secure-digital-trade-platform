@@ -53,6 +53,9 @@ jobs:
           python -m fraud_engine.fake_review_detector
 
       - name: Run tests
+        env:
+          DEMO_API_KEY: "ci-demo-key"
+          PAYMENT_AES_KEY_B64: "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
         run: pytest -q
 
       - name: Bandit (SAST)
