@@ -1,0 +1,15 @@
+{
+  "sid": "s_mwoyn243_kv1h",
+  "startedAt": 1795178015865,
+  "client": {
+    "os": "Windows",
+    "browser": "Chrome",
+    "locale": "en-US",
+    "tz": "Asia/Karachi"
+  },
+  "fp": "0451ecdc62f0bb3e",
+  "tier": "pro",
+  "auth": "oauth",
+  "appVer": "5.7.1",
+  "aegisVer": "5.4.9"
+}
