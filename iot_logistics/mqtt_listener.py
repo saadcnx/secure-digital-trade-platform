@@ -3,11 +3,10 @@ import json
 import os
 import signal
 import time
-import urllib.error
-import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
+import httpx
 import paho.mqtt.client as mqtt
 
 
@@ -37,18 +36,15 @@ def submit_ledger_update(shipment_id: str, event: dict, flags: list[str]) -> Non
         "seal_tampered": bool(event.get("seal_tampered", False)),
     }
 
-    request = urllib.request.Request(
-        f"{LEDGER_URL}/{shipment_id}/events",
-        data=json.dumps(payload).encode("utf-8"),
-        headers={"Content-Type": "application/json"},
-        method="POST",
-    )
-
     try:
-        with urllib.request.urlopen(request, timeout=65) as response:
-            response.read()
-        print(f"⛓️ Ledger updated: {shipment_id} -> {status}")
-    except (urllib.error.URLError, TimeoutError) as exc:
+        response = httpx.post(
+            f"{LEDGER_URL}/{shipment_id}/events",
+            json=payload,
+            timeout=65,
+        )
+        response.raise_for_status()
+        print(f"⛓ Ledger updated: {shipment_id} -> {status}")
+    except (httpx.HTTPError, TimeoutError) as exc:
         # The local JSONL event remains saved; an operator can retry later.
         print(f"⚠️ Ledger update failed; event was saved locally: {exc}")
 
