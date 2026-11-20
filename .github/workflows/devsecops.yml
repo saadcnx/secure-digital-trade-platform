@@ -21,18 +21,34 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.12"
-          cache: "pip"
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+          cache-dependency-glob: "requirements.txt"
 
       - name: Install project dependencies
         run: |
-          python -m pip install --upgrade pip
-          pip install -r requirements.txt
-          pip install pytest bandit pip-audit
+          uv pip install --system -r requirements.txt
+          uv pip install --system pytest bandit pip-audit
 
       - name: Install spaCy English model
-        run: python -m spacy download en_core_web_sm
+        run: uv pip install --system https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.7.1/en_core_web_sm-3.7.1-py3-none-any.whl
+
+      - name: Cache trained fraud artifacts
+        id: fraud-models-cache
+        uses: actions/cache@v4
+        with:
+          path: |
+            fraud_engine/*.joblib
+            fraud_engine/*.pkl
+            *.joblib
+            *.pkl
+          key: fraud-models-${{ hashFiles('fraud_engine/generate_data.py', 'fraud_engine/train_fraud_model.py', 'fraud_engine/fake_review_detector.py', 'requirements.txt') }}
 
       - name: Build synthetic fraud model
+        if: steps.fraud-models-cache.outputs.cache-hit != 'true'
         run: |
           python -m fraud_engine.generate_data
           python -m fraud_engine.train_fraud_model
